@@ -85,20 +85,26 @@ const usuariosPut = async (req, res = response) => {
 
 }
 const usuariosDelete = async (req, res = response) => {
-    const { id, ...resto } = req.params
-    const user = await Usuario.findByIdAndDelete(id)
+    const { id } = req.params
+    //borrar fisicamente con modelo de usuario por metodo de Mongoose:
+    // const user = await Usuario.findByIdAndDelete(id)
+
+
+    //borrar cambiando estado ya que la lista de usuarios ACTIVOS 
+    // que trae el GET son todos los que tengan "estado: true"
+    const usuario = await Usuario.findByIdAndUpdate(id, {estado: false});
     res.json({
         // msg: 'Probando metodo DELETE - Desde controlador',
         id,
-        user
+        usuario
     })
 }
 const usuariosPatch = async (req, res = response) => {
     //copiado desde usuariosPut
-    //habra alguna diferencia entre usuariosPut y usuariosPatch?
+    //¿habra alguna diferencia entre usuariosPut y usuariosPatch?
 
     const { id } = req.params;
-    const { contraseña, google, correo, ...resto } = req.body;
+    const { _id, contraseña, google, correo, ...resto } = req.body;
 
     if (contraseña) {
         //Encriptar la contraseña
@@ -112,10 +118,9 @@ const usuariosPatch = async (req, res = response) => {
     // await user.save();
 
     res.json({
-        // msg: 'Probando metodo PATCH - Desde controlador',
+        // msg: 'Probando metodo PUT - Desde controlador',
         id,
         resto,
-        user
     })
 }
 

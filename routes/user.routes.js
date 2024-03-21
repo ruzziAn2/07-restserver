@@ -13,7 +13,7 @@ const router = Router();
 
 router.get('/', usuariosGet);
 
-router.put('/:id',[
+router.put('/:id', [
     check('id', 'No es un ID válido').isMongoId(),
     check('id', 'Existe usuario con ese ID').custom(existeUsuarioPorID),
     check('rol').custom(rolValido),
@@ -29,8 +29,17 @@ router.post('/', [
     validarCampos
 ], usuariosPost);
 
-router.delete('/:id', usuariosDelete);
+router.delete('/:id', [
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id', 'No existe usuario con ese ID').custom(existeUsuarioPorID),
+    validarCampos
+], usuariosDelete);
 
-router.patch('/:id', usuariosPatch)
+router.patch('/:id', [
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id', 'No existe usuario con ese ID').custom(existeUsuarioPorID),
+    // check('rol').custom(rolValido),
+    validarCampos
+], usuariosPatch)
 
 module.exports = router;

@@ -35,8 +35,9 @@ const usuarioSchema = Schema({
 
 usuarioSchema.methods.toJSON = function () {
     // se descarta la contraseña hasheada y la version del documento pues son datos que no debieramos ver
-    const { __v, contraseña, ...usuario } = this.toObject();
+    const { __v, contraseña, _id, ...usuario } = this.toObject();
     // y se devuelve un objeto con los datos del usuario
+    usuario.uid = _id;
     return usuario
 }
 

@@ -84,7 +84,7 @@ const usuariosPut = async (req, res = response) => {
     })
 
 }
-const usuariosDelete = async (req, res = response) => {
+const usuariosDelete = async (req = request, res = response) => {
     const { id } = req.params
     //borrar fisicamente con modelo de usuario por metodo de Mongoose:
     // const user = await Usuario.findByIdAndDelete(id)
@@ -92,11 +92,14 @@ const usuariosDelete = async (req, res = response) => {
 
     //borrar cambiando estado ya que la lista de usuarios ACTIVOS 
     // que trae el GET son todos los que tengan "estado: true"
-    const usuario = await Usuario.findByIdAndUpdate(id, {estado: false});
+    const usuario = await Usuario.findByIdAndUpdate(id, { estado: false });
+    //usuario que manda la petición con token activado
+    // const usuarioAutenticado = req.usuario;
     res.json({
         // msg: 'Probando metodo DELETE - Desde controlador',
-        id,
+        // usuarioAutenticado,
         usuario
+
     })
 }
 const usuariosPatch = async (req, res = response) => {

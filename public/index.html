@@ -2,16 +2,69 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Denegado</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso Denegado</title>
 </head>
 
 <body>
-    <h1>
-        Acceso Denegado
-    </h1>
+  <h1>
+    Google Sign-in
+    <hr>
 
+  </h1>
+
+
+
+  <div id="buttonDiv"></div>
+  <button id="signOut">SignOut</button>
+
+
+  <script src="https://accounts.google.com/gsi/client" async></script>
+  <script>
+    function handleCredentialResponse(response) {
+
+      const body = { id_token: response.credential }
+      fetch('http://localhost:3030/api/auth/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
+        .then(r => r.json())
+        .then(resp => {
+          console.log(resp)
+          localStorage.setItem('email', resp.usuario.correo)
+        })
+        .catch(console.warn);
+      console.log("Encoded JWT ID token: " + response.credential);
+    }
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: "674376710776-nq44d4ds26oe3ha3k45u7b2lkteg0kd3.apps.googleusercontent.com",
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.renderButton(
+        document.getElementById("buttonDiv"),
+        { theme: "outline", size: "large" }  // customization attributes
+      );
+      google.accounts.id.prompt(); // also display the One Tap dialog
+    }
+
+    const button = document.getElementById('signOut');
+    button.onclick = () => {
+
+      console.log(google.accounts.id)
+      google.accounts.id.disableAutoSelect()
+
+      google.accounts.id.revoke(localStorage.getItem('email'), done => {
+        localStorage.clear()
+        location.reload()
+      })
+    }
+
+  </script>
 </body>
 
 </html>

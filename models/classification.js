@@ -26,4 +26,4 @@ clasificacionSchema.methods.toJSON = function () {
     return data
 }
 
-module.exports = model('Clasificacion', clasificacionSchema);
+module.exports = model('Clasificacione', clasificacionSchema);
